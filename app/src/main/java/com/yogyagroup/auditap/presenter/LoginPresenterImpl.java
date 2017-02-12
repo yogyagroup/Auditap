@@ -90,18 +90,28 @@ public class LoginPresenterImpl implements LoginPresenter {
             public void onResponse(Call<UserCallback> call, Response<UserCallback> response) {
                 loginView.hideLoading();
 
-                if (response.body().getMessage().equals("Success")) {
-                    SharedPreferences.Editor editor = sharedPreferences.edit();
-                    editor.putInt("id", response.body().getUser().getId()).apply();
-                    editor.putBoolean("isLoggedIn", true).apply();
-                    editor.putInt("storeId", response.body().getUser().getStore_id()).apply();
+//                if (response.body().getMessage().equals("Success")) {
+//                    SharedPreferences.Editor editor = sharedPreferences.edit();
+//                    editor.putInt("id", response.body().getUser().getId()).apply();
+//                    editor.putBoolean("isLoggedIn", true).apply();
+//                    editor.putInt("storeId", response.body().getUser().getStore_id()).apply();
+//
+//                    Intent intent = new Intent(application, MainActivity.class);
+//                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                    application.startActivity(intent);
+//                } else {
+//                    Toast.makeText(application, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+//                }
 
-                    Intent intent = new Intent(application, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-                    application.startActivity(intent);
-                } else {
-                    Toast.makeText(application, response.body().getMessage(), Toast.LENGTH_SHORT).show();
-                }
+                // Skip login temporary
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putInt("id", 3).apply();
+                editor.putBoolean("isLoggedIn", true).apply();
+                editor.putInt("storeId", 3).apply();
+
+                Intent intent = new Intent(application, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                application.startActivity(intent);
             }
 
             @Override

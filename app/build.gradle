@@ -28,7 +28,7 @@ android {
     }
     productFlavors {
         devel {
-            buildConfigField 'String', 'API_URL', '"http://auditap-staging.yogya.com/"'
+            buildConfigField 'String', 'API_URL', '"http://auditap-staging.yogya.com/api/"'
             buildConfigField 'boolean', 'DEVELOPMENT', 'true'
         }
         prod {
