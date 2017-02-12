@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="40dp"
+    android:id="@+id/rlUser_layout"
+    android:orientation="horizontal"
+    android:paddingEnd="8dp"
+    android:paddingLeft="8dp"
+    android:paddingRight="8dp"
+    android:paddingStart="8dp">
+
+    <TextView
+        android:id="@+id/view_memo_title"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
+        android:text="Memo Title"
+        android:textColor="#145789"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+    <ImageView
+        android:id="@+id/image_overflow"
+        android:layout_width="0dp"
+        android:scaleType="fitEnd"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:contentDescription="@null"
+        android:padding="9dp"
+        android:src="@drawable/feed_more" />
+</LinearLayout>

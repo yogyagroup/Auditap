@@ -32,7 +32,7 @@ android {
             buildConfigField 'boolean', 'DEVELOPMENT', 'true'
         }
         prod {
-            buildConfigField 'String', 'API_URL', '"http://auditap.yogya.com/"'
+            buildConfigField 'String', 'API_URL', '"https://mjm-yamaha.com/"'
             buildConfigField 'boolean', 'DEVELOPMENT', 'false'
         }
     }
