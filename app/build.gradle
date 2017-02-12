@@ -1,29 +1,104 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    compileSdkVersion 24
+    buildToolsVersion "24.0.1"
+    signingConfigs {
+        release
+    }
     defaultConfig {
         applicationId "com.yogyagroup.auditap"
-        minSdkVersion 15
-        targetSdkVersion 25
-        versionCode 1
+        minSdkVersion 16
+        targetSdkVersion 24
+        versionCode 170213
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+        }
+    }
+    productFlavors {
+        devel {
+            buildConfigField 'String', 'API_URL', '"http://auditap-staging.yogya.com/"'
+            buildConfigField 'boolean', 'DEVELOPMENT', 'true'
+        }
+        prod {
+            buildConfigField 'String', 'API_URL', '"http://auditap.yogya.com/"'
+            buildConfigField 'boolean', 'DEVELOPMENT', 'false'
         }
     }
 }
 
+if (project.hasProperty("AndroidProject.signing")
+        && new File(project.property("AndroidProject.signing").toString()).exists()) {
+    def Properties props = new Properties()
+    def propFile = new File(project.property("AndroidProject.signing").toString())
+    if(propFile.canRead()) {
+        props.load(new FileInputStream(propFile))
+        if (props!=null && props.containsKey('STORE_FILE') && props.containsKey('STORE_PASSWORD') &&
+                props.containsKey('KEY_ALIAS') && props.containsKey('KEY_PASSWORD')) {
+            android.signingConfigs.release.storeFile = file(props['STORE_FILE'])
+            android.signingConfigs.release.storePassword = props['STORE_PASSWORD']
+            android.signingConfigs.release.keyAlias = props['KEY_ALIAS']
+            android.signingConfigs.release.keyPassword = props['KEY_PASSWORD']
+        } else {
+            println 'keystore.properties found but some entries are missing'
+            android.buildTypes.release.signingConfig = null
+        }
+    } else {
+        println 'keystore.properties file not found'
+        android.buildTypes.release.signingConfig = null
+    }
+}
+
+final RETROFIT_VERSION = '2.1.0'
+final DAGGER_VERSION = '2.0.2'
+final DEXMAKER_VERSION = '1.2'
+final RUNNER_VERSION = '0.5'
+final ESPRESSO_VERSION = '2.2.2'
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
-        exclude group: 'com.android.support', module: 'support-annotations'
-    })
-    compile 'com.android.support:appcompat-v7:25.1.1'
+
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
     testCompile 'junit:junit:4.12'
+
+    compile "com.google.dagger:dagger:${DAGGER_VERSION}"
+    apt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    androidTestApt "com.google.dagger:dagger-compiler:${DAGGER_VERSION}"
+
+    compile 'com.jakewharton:butterknife:8.2.1'
+    apt 'com.jakewharton:butterknife-compiler:8.2.1'
+
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.squareup.okhttp3:okhttp:3.3.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
+    compile "com.squareup.retrofit2:adapter-rxjava:${RETROFIT_VERSION}"
+    compile "com.squareup.retrofit2:converter-gson:${RETROFIT_VERSION}"
+    compile 'io.reactivex:rxandroid:1.1.0'
+
+    compile 'com.pkmmte.view:circularimageview:1.1'
+    compile 'me.iwf.photopicker:PhotoPicker:0.2.8@aar'
+    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.soundcloud.android:android-crop:1.0.1@aar'
+
+    androidTestCompile "com.android.support:support-annotations:24.0.0"
+    androidTestCompile "com.android.support.test:runner:${RUNNER_VERSION}"
+    androidTestCompile "com.android.support.test:rules:${RUNNER_VERSION}"
+    androidTestCompile "com.android.support.test.espresso:espresso-core:${ESPRESSO_VERSION}"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:${ESPRESSO_VERSION}"
+    androidTestCompile "com.google.dexmaker:dexmaker:${DEXMAKER_VERSION}"
+    androidTestCompile "com.google.dexmaker:dexmaker-mockito:${DEXMAKER_VERSION}"
+    androidTestCompile 'org.mockito:mockito-core:1.10.19'
 }
